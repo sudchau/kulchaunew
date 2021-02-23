@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Card Identity Recognition System </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <style>
+    form{
+          margin: auto;
+          text-align: center;      
+          width: 50%;
+          padding: 10px;
+    }
+    h1{
+        text-align:center;
+        padding: 200px;
+        margin: 40px;
+        background-color: #e6e6e6;
+    }
+    </style>
+</head>
+<body>
+    <h1>{{answer}}</h1>
+        <form action="{{ url_for('kulchau') }}">
+            <button type="submit" class="btn btn-primary" value="submit">Try again</button>
+        </form>
+</body>
+</html>
