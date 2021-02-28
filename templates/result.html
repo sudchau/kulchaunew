@@ -16,10 +16,16 @@
         margin: 40px;
         background-color: #e6e6e6;
     }
+    .new{
+        color: #59ab99
+    }
+    .hehe{
+        color: #41697a
+    }
     </style>
 </head>
 <body>
-    <h1>{{answer}}</h1>
+    <h1>This is a <span class="new">{{identif}}</span> with UID<br><span class="hehe">{{uiid}}</span></h1>
         <form action="{{ url_for('kulchau') }}">
             <button type="submit" class="btn btn-primary" value="submit">Try again</button>
         </form>
