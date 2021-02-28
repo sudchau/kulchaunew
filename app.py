@@ -81,7 +81,7 @@ def main(img):
 
   #CODE FOR SEARCHING THE FINAL STRING FOR THE UIDs SPECIFIC TO ALL TYPES OF KYCs
 
-
+  identiciation = ""
   #VOTER ID CHECK
   vote=0
   startvo=-1
@@ -105,8 +105,9 @@ def main(img):
       startvo=i
       break
   if vote==1:
-    retval="This is a Voter ID Card with UID: " + str(extractedInformation[startvo:startvo+10])
-    return retval
+    retval=str(extractedInformation[startvo:startvo+10])
+    identiciation = "Voter ID"
+    return retval, identification
 
 
   #PAN CARD CHECK
@@ -134,8 +135,9 @@ def main(img):
       startpan=i
       break
   if pan==1:
-    retval="This is a PAN Card with UID: " + str(extractedInformation[startpan:startpan+10])
-    return retval
+    retval=str(extractedInformation[startpan:startpan+10])
+    identiciation = "PAN Card"
+    return retval, identiciation
 
 
   #AADHAAR CARD CHECK
@@ -163,8 +165,9 @@ def main(img):
       startaa=i
       break
   if aadhaar==1:
-    retval="This is an Aadhaar Card with UID: " + str(extractedInformation[startaa:startaa+14])
-    return retval
+    retval=str(extractedInformation[startaa:startaa+14])
+    identiciation = "Aadhaar Card"
+    return retval, identiciation
 
 
   #PASSPORT CARD CHECK  
@@ -190,8 +193,9 @@ def main(img):
       startpa=i
       break
   if passport==1:
-    retval="This is a Passport Card with UID: " + str(extractedInformation[startpa:startpa+8])
-    return retval
+    retval=str(extractedInformation[startpa:startpa+8])
+    identiciation = "Passport Card"
+    return retval, identiciation
 
 
   #DRIVING LICENCE CHECK
@@ -220,7 +224,8 @@ def main(img):
       break
   if licence==1:
     retval="This is a Driving Licence Card with UID: " + str(extractedInformation[startli:startli+16])
-    return retval
+    identiciation = "Driving Licence Card"
+    return retval, identiciation
 
 
   #JOB CARD CHECK
@@ -256,13 +261,15 @@ def main(img):
       startnr=i
       break
   if nrega==1:
-    retval="This is a NREGA Card with UID: " + str(extractedInformation[startnr:startnr+21])
-    return retval
+    retval=str(extractedInformation[startnr:startnr+21])
+    identiciation = "NREGA Card"
+    return retval, identiciation
 
 
   #IF NOTHING IS FOUNG 
-  retval="Please try again"
-  return retval
+  retval="Please try again, the image was not clear enough"
+  identiciation = "none found"
+  return retval, identiciation
 
 
 @app.route('/',methods=['POST','GET'])
@@ -270,15 +277,29 @@ def kulchau():
     if request.method == 'POST':
         file = request.files['image'].read()
         bg = im.open(io.BytesIO(file))
-        answer = main(bg)
-        return redirect('/{}'.format(answer))
+        answer, uid = main(bg)
+        return redirect('/{}-{}'.format(answer,uid))
     return render_template('index.html')
+
+# @app.route('/server',methods=['POST','GET'])
+# def forserver():
 
 
 @app.route('/<result>',methods=['POST','GET'])
 def new_page(result):
-    # return '<h1>{}</h1>'.format(result)
-    return render_template('result.html',answer=result)
+    uid = ""
+    answer = ""
+    j = -1
+    for i in range(len(result)):
+        if(result[i]=='-'):
+            j = i
+            break
+        else:
+            uid = uid + result[i]
+    for i in range(j+1,len(result)):
+        answer = answer + result[i]
+
+    return render_template('result.html',identif=answer,uiid=uid)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5000,debug=True)
