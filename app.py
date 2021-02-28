@@ -223,7 +223,7 @@ def main(img):
       startli=i
       break
   if licence==1:
-    retval="This is a Driving Licence Card with UID: " + str(extractedInformation[startli:startli+16])
+    retval=str(extractedInformation[startli:startli+16])
     identiciation = "Driving Licence Card"
     return retval, identiciation
 
