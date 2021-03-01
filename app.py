@@ -136,31 +136,33 @@ def main(img):
   img2 = img2[:,:,::-1].copy()
   img2_raw = img2
   img2 = cv2.medianBlur(img2_raw,5)
-  extractedInformation6 = pytesseract.image_to_string(img2)
+  # extractedInformation6 = pytesseract.image_to_string(img2)
   #IMG2 AND IMG2_RAW ARE THE NON - SKEW CORRECTED IMAGES
 
 
   img3 = cv2.medianBlur(img1_raw,3)
-  extractedInformation3 = pytesseract.image_to_string(img3)
+  # extractedInformation3 = pytesseract.image_to_string(img3)
 
 
   img4 = cv2.medianBlur(img2_raw,3)
-  extractedInformation2 = pytesseract.image_to_string(img4)
+  # extractedInformation2 = pytesseract.image_to_string(img4)
 
 
   img5 = cv2.medianBlur(img1_raw,1) 
-  extractedInformation4 = pytesseract.image_to_string(img5)
+  # extractedInformation4 = pytesseract.image_to_string(img5)
 
 
   img6 = cv2.medianBlur(img2_raw,1)
-  extractedInformation5 = pytesseract.image_to_string(img6)
+  # extractedInformation5 = pytesseract.image_to_string(img6)
   #IMG1, IMG3, IMG5 ARE THE PROCESSED VERSIONS OF IMG (SKEW CORRECTED)
   #IMG2, IMG4, IMG6 ARE THE PROCESSED VERSIONS OF IMG_RAW(NON - SKEW CORRECTED)
 
 
   #CONCATENATION OF ALL THE OCR STRINGS 
-  extractedInformation  = "   " + str(extractedInformation1 + " " + extractedInformation2 + " " + extractedInformation3 + " " + extractedInformation4 + " " + extractedInformation5 + " " + extractedInformation6) + "   "
+  # extractedInformation  = "   " + str(extractedInformation1 + " " + extractedInformation2 + " " + extractedInformation3 + " " + extractedInformation4 + " " + extractedInformation5 + " " + extractedInformation6) + "   "
+  extractedInformation = str(extractedInformation1)
   n = len(extractedInformation)
+
 
 
   #CODE FOR SEARCHING THE FINAL STRING FOR THE UIDs SPECIFIC TO ALL TYPES OF KYCs
@@ -369,20 +371,20 @@ def kulchau():
     file = request.files['image'].read()
     bg = im.open(io.BytesIO(file))
     uid, kyc_type,final_score = main(bg)
-    return redirect('/result/{}-{}-{}'.format(uid, kyc_type, final_score))
+    return redirect('/{}-{}-{}'.format(uid, kyc_type, final_score))
   return render_template('index.html')
  
 
 @app.route('/server',methods=['POST','GET'])
 def forserver():
   url = request.form['image']
-  #response = requests.get(url)
-  #bg = im.open(io.BytesIO(response.content))
-  #uid, kyc_type,final_score = main(bg)
-  #return "This is a {}, with UID = {}\nWith Heuristic Closeness Percentage = {}%".format(kyc_type,uid,final_score)
-  return "hello"
+  response = requests.get(url)
+  bg = im.open(io.BytesIO(response.content))
+  uid, kyc_type,final_score = main(bg)
+  return "This is a {}, with UID = {}\nWith Heuristic Closeness Percentage = {}%".format(kyc_type,uid,final_score)
 
-@app.route('/result/<result>',methods=['POST', 'GET'])
+
+@app.route('/<result>',methods=['POST', 'GET'])
 def new_page(result):
   uid = ""
   kyc_type = ""
