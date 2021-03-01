@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Card Identity Recognition System </title>
+    <title>Results</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <style>
     form{
@@ -17,20 +17,22 @@
         background-color: #e6e6e6;
     }
     .new{
-        color: #59ab99
+        color: #59ab99;
+        text-decoration: underline;
     }
     .hehe{
-        color: #41697a
+        color: #41697a;
+        text-decoration: underline;
     }
     .yyy{
-        color: #847de8;
+        color: #267cde;
         font-size: 50%
     }
     </style>
 </head>
 <body>
     {% if flag %}
-        <h1>This is a <span class="new">{{identif}}</span> with UID<br><span class="hehe">{{uiid}}</span><br><span class="yyy">Probability in Percentage is {{final_score}}%</span></h1>
+        <h1>This is a <span class="new">{{identif}}</span> with UID<br><span class="hehe">{{uiid}}</span><br><span class="yyy">Heuristic Percentage of Clode Match is {{final_score}}%</span></h1>
 
     {% else %}
         <h1><span class="new">{{uiid}}</span></h1>
@@ -40,3 +42,4 @@
         </form>
 </body>
 </html>
+
