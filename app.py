@@ -376,11 +376,11 @@ def kulchau():
 @app.route('/server',methods=['POST','GET'])
 def forserver():
   url = request.form['image']
-  response = requests.get(url)
-  bg = im.open(io.BytesIO(response.content))
-  uid, kyc_type,final_score = main(bg)
-  return "This is a {}, with UID = {}\nWith Heuristic Closeness Percentage = {}%".format(kyc_type,uid,final_score)
-
+  #response = requests.get(url)
+  #bg = im.open(io.BytesIO(response.content))
+  #uid, kyc_type,final_score = main(bg)
+  #return "This is a {}, with UID = {}\nWith Heuristic Closeness Percentage = {}%".format(kyc_type,uid,final_score)
+  return "hello"
 
 @app.route('/result/<result>',methods=['POST', 'GET'])
 def new_page(result):
