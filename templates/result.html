@@ -22,10 +22,19 @@
     .hehe{
         color: #41697a
     }
+    .yyy{
+        color: #847de8;
+        font-size: 50%
+    }
     </style>
 </head>
 <body>
-    <h1>This is a <span class="new">{{identif}}</span> with UID<br><span class="hehe">{{uiid}}</span></h1>
+    {% if flag %}
+        <h1>This is a <span class="new">{{identif}}</span> with UID<br><span class="hehe">{{uiid}}</span><br><span class="yyy">Probability in Percentage is {{final_score}}%</span></h1>
+
+    {% else %}
+        <h1><span class="new">{{uiid}}</span></h1>
+    {% endif %}
         <form action="{{ url_for('kulchau') }}">
             <button type="submit" class="btn btn-primary" value="submit">Try again</button>
         </form>
