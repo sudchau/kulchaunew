@@ -371,7 +371,7 @@ def kulchau():
     file = request.files['image'].read()
     bg = im.open(io.BytesIO(file))
     uid, kyc_type,final_score = main(bg)
-    return redirect('/{}-{}-{}'.format(uid, kyc_type, final_score))
+    return redirect('/result/{}-{}-{}'.format(uid, kyc_type, final_score))
   return render_template('index.html')
  
 
