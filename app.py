@@ -135,8 +135,8 @@ def main(img):
   img2 = np.array(img_raw)
   img2 = img2[:,:,::-1].copy()
   img2_raw = img2
-  # img2 = cv2.medianBlur(img2_raw,5)
-  # extractedInformation6 = pytesseract.image_to_string(img2)
+  img2 = cv2.medianBlur(img2_raw,5)
+  extractedInformation6 = pytesseract.image_to_string(img2)
   #IMG2 AND IMG2_RAW ARE THE NON - SKEW CORRECTED IMAGES
 
 
@@ -160,7 +160,7 @@ def main(img):
 
   #CONCATENATION OF ALL THE OCR STRINGS 
   # extractedInformation  = "   " + str(extractedInformation1 + " " + extractedInformation2 + " " + extractedInformation3 + " " + extractedInformation4 + " " + extractedInformation5 + " " + extractedInformation6) + "   "
-  extractedInformation = str(extractedInformation1) + " " + str(extractedInformation2)
+  extractedInformation = str(extractedInformation1) + " " + str(extractedInformation2) + " " + str(extractedInformation6)
   n = len(extractedInformation)
 
 
