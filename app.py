@@ -145,7 +145,7 @@ def main(img):
 
 
   img4 = cv2.medianBlur(img2_raw,3)
-  # extractedInformation2 = pytesseract.image_to_string(img4)
+  extractedInformation2 = pytesseract.image_to_string(img4)
 
 
   img5 = cv2.medianBlur(img1_raw,1) 
@@ -160,7 +160,7 @@ def main(img):
 
   #CONCATENATION OF ALL THE OCR STRINGS 
   # extractedInformation  = "   " + str(extractedInformation1 + " " + extractedInformation2 + " " + extractedInformation3 + " " + extractedInformation4 + " " + extractedInformation5 + " " + extractedInformation6) + "   "
-  extractedInformation = str(extractedInformation1)
+  extractedInformation = str(extractedInformation1) + " " + str(extractedInformation2)
   n = len(extractedInformation)
 
 
