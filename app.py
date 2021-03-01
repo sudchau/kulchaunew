@@ -8,6 +8,7 @@ import io
 import cv2
 import numpy as np
 from scipy.ndimage import interpolation as inter
+import requests
 
 
 app = Flask(__name__)
@@ -374,7 +375,11 @@ def kulchau():
 
 @app.route('/server',methods=['POST','GET'])
 def forserver():
-  pass
+  url = request.form['image']
+  response = requests.get(url)
+  bg = im.open(io.BytesIO(response.content))
+  uid, kyc_type,final_score = main(bg)
+  return "This is a {}, with UID = {}\nWith Heuristic Closeness Percentage = {}%".format(kyc_type,uid,final_score)
 
 
 @app.route('/<result>',methods=['POST', 'GET'])
