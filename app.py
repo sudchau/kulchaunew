@@ -384,7 +384,7 @@ def forserver():
   return "This is a {}, with UID = {}\nWith Heuristic Closeness Percentage = {}%".format(kyc_type,uid,final_score)
 
 
-@app.route('/<result>',methods=['POST', 'GET'])
+@app.route('/result/<result>',methods=['POST', 'GET'])
 def new_page(result):
   uid = ""
   kyc_type = ""
