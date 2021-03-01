@@ -135,12 +135,12 @@ def main(img):
   img2 = np.array(img_raw)
   img2 = img2[:,:,::-1].copy()
   img2_raw = img2
-  img2 = cv2.medianBlur(img2_raw,5)
+  # img2 = cv2.medianBlur(img2_raw,5)
   # extractedInformation6 = pytesseract.image_to_string(img2)
   #IMG2 AND IMG2_RAW ARE THE NON - SKEW CORRECTED IMAGES
 
 
-  img3 = cv2.medianBlur(img1_raw,3)
+  # img3 = cv2.medianBlur(img1_raw,3)
   # extractedInformation3 = pytesseract.image_to_string(img3)
 
 
@@ -148,11 +148,11 @@ def main(img):
   extractedInformation2 = pytesseract.image_to_string(img4)
 
 
-  img5 = cv2.medianBlur(img1_raw,1) 
+  # img5 = cv2.medianBlur(img1_raw,1) 
   # extractedInformation4 = pytesseract.image_to_string(img5)
 
 
-  img6 = cv2.medianBlur(img2_raw,1)
+  # img6 = cv2.medianBlur(img2_raw,1)
   # extractedInformation5 = pytesseract.image_to_string(img6)
   #IMG1, IMG3, IMG5 ARE THE PROCESSED VERSIONS OF IMG (SKEW CORRECTED)
   #IMG2, IMG4, IMG6 ARE THE PROCESSED VERSIONS OF IMG_RAW(NON - SKEW CORRECTED)
