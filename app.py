@@ -1,6 +1,7 @@
-#WELCOME TO KULCHAU'S FLASK APP
+#WELCOME TO KULCHAU'S FLASK APP --->
 
 
+#LIBRARIES
 from flask import Flask, render_template, request, redirect
 from PIL import Image as im
 import pytesseract
@@ -14,13 +15,39 @@ import requests
 app = Flask(__name__)
 
 
-def find_score(arr, angle):
-  data = inter.rotate(arr, angle, reshape=False, order=0)
-  hist = np.sum(data, axis=1)
-  score = np.sum((hist[1:] - hist[:-1]) ** 2)
-  return hist, score
+#SKEW CORRECTION FUNCTION --->
+def correct_skew(image, delta=1, limit=5):
+  def determine_score(arr, angle):
+    data = inter.rotate(arr, angle, reshape=False, order=0)
+    histogram = np.sum(data, axis=1)
+    score = np.sum((histogram[1:] - histogram[:-1]) ** 2)
+    return histogram, score
+
+  gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+  thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1] 
+
+  scores = []
+  angles = np.arange(-limit, limit + delta, delta)
+
+  for angle in angles:
+    histogram, score = determine_score(thresh, angle)
+    scores.append(score)
+
+  best_angle = angles[scores.index(max(scores))]
+
+  (h, w) = image.shape[:2]
+  center = (w // 2, h // 2)
+  M = cv2.getRotationMatrix2D(center, best_angle, 1.0)
+  rotated = cv2.warpAffine(image, M, (w, h), flags=cv2.INTER_CUBIC, \
+              borderMode=cv2.BORDER_REPLICATE)
+
+  return best_angle, rotated
 
 
+#DOUBLE CHECK FUNCTION = RESPONSIBLE FOR FINDIND HEURISTIC CLOSENESS INDEX --->
+
+
+#DOUBLE CHECK FUNCTION FOR AADHAAR CARD --->
 def aadhaar_double_check(extractedInformation):
   n = len(extractedInformation)
   to_check1 = "DOB : **/##/^^^^ "
@@ -71,6 +98,7 @@ def aadhaar_double_check(extractedInformation):
   return str(final_score)
 
 
+#DOUBLE CHECK FUNCTION FOR PASSPORT 
 def passport_double_check(extractedInformation):
   n = len(extractedInformation)
   to_check1 = "REPUBLIC OF INDIA"
@@ -99,6 +127,7 @@ def passport_double_check(extractedInformation):
   return str(final_score)
 
 
+#DOUBLE CHECK FUNCTION FOR DRIVING LICENCE --->
 def licence_double_check(extractedInformation):
   n = len(extractedInformation)
   to_check1 = "AUTHORISATION TO DRIVE FOLLOWING CLASS"
@@ -144,6 +173,7 @@ def licence_double_check(extractedInformation):
   return str(final_score)
 
 
+#DOUBLE CHECK FUNCTION FOR PAN CARD
 def pan_double_check(extractedInformation):
   n = len(extractedInformation)
   to_check1 = "income tax department"
@@ -177,6 +207,8 @@ def pan_double_check(extractedInformation):
   final_score = max(max_match1, max_match2) * 100 / max_score
   return str(final_score)
 
+
+#DOUBLE CHECK FOR VOTER ID
 def voter_double_check(extractedInformation):
   n = len(extractedInformation)
   to_check1 = "election commission of india"
@@ -211,68 +243,9 @@ def voter_double_check(extractedInformation):
   return str(final_score)
 
 
-def main(img):
-  img_raw = img
-  #SKEW CORRECTION ON IMG
-  wd, ht = img.size
-  delta = 1
-  limit = 5
-  angles = np.arange(-limit, limit+delta, delta)
-  scores = []
-  for angle in angles:
-    hist, score = find_score(img, angle)
-    scores.append(score)
-  best_score = max(scores)
-  best_angle = angles[scores.index(best_score)]
-  data = inter.rotate(img, best_angle, reshape=False, order=0)
-  img = im.fromarray((data).astype("uint8"))
-
-
-  #CONVERSION OF IMG AND IMG_RAW TO A FORMAT THAT CAN BE PROCESSED BY CV2
-  #IMG--->IMG1
-  #IMG_RAW--->IMG2
-  img1 = np.array(img)
-  img1 = img1[:, :, ::-1].copy()
-  img1_raw = img1
-  img1 = cv2.medianBlur(img1_raw,5)
-
-
-  extractedInformation1 = pytesseract.image_to_string(img1)
-  #IMG1 AND IMG1_RAW ARE THE SKEW CORRECTED IMAGES
-
-
-  img2 = np.array(img_raw)
-  img2 = img2[:,:,::-1].copy()
-  img2_raw = img2
-  img2 = cv2.medianBlur(img2_raw,5)
-  extractedInformation2 = pytesseract.image_to_string(img2)
-  #IMG2 AND IMG2_RAW ARE THE NON - SKEW CORRECTED IMAGES
-
-
-  img3 = cv2.medianBlur(img1_raw,3)
-  extractedInformation3 = pytesseract.image_to_string(img3)
-
-
-  img4 = cv2.medianBlur(img2_raw,3)
-  extractedInformation4 = pytesseract.image_to_string(img4)
-
-
-  img5 = cv2.medianBlur(img1_raw,1) 
-  extractedInformation5 = pytesseract.image_to_string(img5)
-
-
-  img6 = cv2.medianBlur(img2_raw,1)
-  extractedInformation6 = pytesseract.image_to_string(img6)
-  #IMG1, IMG3, IMG5 ARE THE PROCESSED VERSIONS OF IMG (SKEW CORRECTED)
-  #IMG2, IMG4, IMG6 ARE THE PROCESSED VERSIONS OF IMG_RAW(NON - SKEW CORRECTED)
-
-
-  #CONCATENATION OF ALL THE OCR STRINGS 
-  extractedInformation  = "   " + str(extractedInformation1 + " " + extractedInformation2 + " " + extractedInformation3 + " " + extractedInformation4 + " " + extractedInformation5 + " " + extractedInformation6) + "   "
-  #extractedInformation = str(extractedInformation1) + " " + str(extractedInformation2) + " " + str(extractedInformation6)
-  n = len(extractedInformation)
-  #print(extractedInformation)
-
+#CODE FOR OUR ALGORITHM --->
+def OUR_ALGORITHM(extractedInformation):
+  n=len(extractedInformation)
   #CODE FOR SEARCHING THE FINAL STRING FOR THE UIDs SPECIFIC TO ALL TYPES OF KYCs
 
 
@@ -336,7 +309,7 @@ def main(img):
     uid=str(extractedInformation[startpan:startpan+10])
     kyc_type="PAN Card"
     final_score=pan_double_check(extractedInformation)
-    return uid, kyc_type,final_score
+    return uid, kyc_type, final_score
 
 
   #DRIVING LICENCE CHECK
@@ -473,6 +446,92 @@ def main(img):
   return uid, kyc_type, "---"
 
 
+#MAIN WEBSITE FUNCTION -->
+def main(img):
+  img_raw = img
+  #CONVERSION OF IMG AND IMG_RAW TO A FORMAT THAT CAN BE PROCESSED BY CV2
+  #IMG--->IMG1
+  #IMG_RAW--->IMG2
+  #img.save('lolskew.jpg')
+  img1 = np.array(img)
+  img1 = img1[:, :, ::-1].copy()
+
+
+  #SKEW CORRECTION ON IMG
+  angle, img1 = correct_skew(img1)
+  img1_raw = img1
+
+
+  img1 = cv2.medianBlur(img1_raw,5)
+  extractedInformation1 = pytesseract.image_to_string(img1)
+  #IMG1 AND IMG1_RAW ARE THE SKEW CORRECTED IMAGES
+
+
+  img2 = np.array(img_raw)
+  img2 = img2[:,:,::-1].copy()
+  img2_raw = img2
+
+
+  img2 = cv2.medianBlur(img2_raw,5)
+  extractedInformation2 = pytesseract.image_to_string(img2)
+  #IMG2 AND IMG2_RAW ARE THE NON - SKEW CORRECTED IMAGES
+
+
+  img3 = cv2.medianBlur(img1_raw,3)
+  extractedInformation3 = pytesseract.image_to_string(img3)
+
+
+  img4 = cv2.medianBlur(img2_raw,3)
+  extractedInformation4 = pytesseract.image_to_string(img4)
+
+
+  img5 = cv2.medianBlur(img1_raw,1) 
+  extractedInformation5 = pytesseract.image_to_string(img5)
+
+
+  img6 = cv2.medianBlur(img2_raw,1)
+  extractedInformation6 = pytesseract.image_to_string(img6)
+  #IMG1, IMG3, IMG5 ARE THE PROCESSED VERSIONS OF IMG (SKEW CORRECTED)
+  #IMG2, IMG4, IMG6 ARE THE PROCESSED VERSIONS OF IMG_RAW(NON - SKEW CORRECTED)
+
+
+  #CONCATENATION OF ALL THE OCR STRINGS 
+  extractedInformation  = "   " + str(extractedInformation1 + " " + extractedInformation2 + " " + extractedInformation3 + " " + extractedInformation4 + " " + extractedInformation5 + " " + extractedInformation6) + "   "
+  
+
+  return OUR_ALGORITHM(extractedInformation)
+
+
+#MAIN FUNCTIONS FOR MOBILE APPLICATION (FOR FASTER EXECUTION ON APP)---> 
+def main1(img):
+  img1 = np.array(img)
+  img1 = img1[:, :, ::-1].copy()
+  img1 = cv2.medianBlur(img1,5)
+  extractedInformation1 = pytesseract.image_to_string(img1)
+  extractedInformation1 = "  " + extractedInformation1 + "  "
+  return OUR_ALGORITHM(extractedInformation1)
+  
+
+def main2(img):
+  img2 = np.array(img)
+  img2 = img2[:, :, ::-1].copy()
+  img2 = cv2.medianBlur(img2,3)
+  extractedInformation2 = pytesseract.image_to_string(img2)
+  extractedInformation2 = "  " + extractedInformation2 + "  "
+  return OUR_ALGORITHM(extractedInformation2)
+
+
+def main3(img):
+  img3 = np.array(img)
+  img3 = img3[:, :, ::-1].copy()
+  img3 = cv2.medianBlur(img2,3)
+  extractedInformation3 = pytesseract.image_to_string(img3)
+  extractedInformation3 = "  " + extractedInformation3 + "  "
+  return OUR_ALGORITHM(extractedInformation3)
+
+
+#SERVERS --->
+
 @app.route('/',methods = ['POST', 'GET'])
 def kulchau():
   if request.method == 'POST':
@@ -521,4 +580,3 @@ def new_page(result):
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0', port = 5000, debug = True)
-
