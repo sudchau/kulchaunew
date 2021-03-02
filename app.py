@@ -60,7 +60,7 @@ def aadhaar_double_check(extractedInformation):
     curr_match2 = 0
     yyyy = "0"
     for j in range(len(to_check2)):
-      c = extractedInformation[i + j];
+      c = extractedInformation[i + j]
       if to_check2[j] == '^' and c >= '0' and c <= '9':
         yyyy = yyyy + c
       elif to_check2[j] == c:
@@ -524,7 +524,7 @@ def main2(img):
 def main3(img):
   img3 = np.array(img)
   img3 = img3[:, :, ::-1].copy()
-  img3 = cv2.medianBlur(img2,3)
+  img3 = cv2.medianBlur(img3,1)
   extractedInformation3 = pytesseract.image_to_string(img3)
   extractedInformation3 = "  " + extractedInformation3 + "  "
   return OUR_ALGORITHM(extractedInformation3)
@@ -546,9 +546,28 @@ def kulchau():
 def forserver():
   url = request.form['image']
   response = requests.get(url)
+  flag = request.form['flag']
   bg = im.open(io.BytesIO(response.content))
-  uid, kyc_type,final_score = main(bg)
-  return "This is a {}, with UID = {}\nWith Heuristic Closeness Percentage = {}%".format(kyc_type,uid,final_score)
+  a, b = bg.size
+  print("{} and {}".format(a,b))
+  if flag=='0':
+    newflag = 1    
+    uid, kyc_type,final_score = main1(bg)
+    if(kyc_type=='none found'):
+      newflag = 0
+    return "{}This is a {}, with UID = {}\nWith Heuristic Closeness Index = {}%".format(newflag,kyc_type,uid,final_score)
+  if flag=='1':
+    newflag = 1    
+    uid, kyc_type,final_score = main2(bg)
+    if(kyc_type=='none found'):
+      newflag = 0
+    return "{}This is a {}, with UID = {}\nWith Heuristic Closeness Index = {}%".format(newflag,kyc_type,uid,final_score)
+  if flag=='2':
+    newflag = 1    
+    uid, kyc_type,final_score = main3(bg)
+    if(kyc_type=='none found'):
+      newflag = 0
+    return "{}This is a {}, with UID = {}\nWith Heuristic Closeness Index = {}%".format(newflag,kyc_type,uid,final_score)
 
 
 @app.route('/result/<result>',methods=['POST', 'GET'])
