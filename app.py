@@ -23,23 +23,48 @@ def find_score(arr, angle):
 
 def aadhaar_double_check(extractedInformation):
   n = len(extractedInformation)
-  to_check1 = "DOB : **/**/"
-  to_check2 = "Year of Birth : "
+  to_check1 = "DOB : **/##/^^^^ "
+  to_check2 = "Year of Birth : ^^^^ "
   max_score = len(to_check1) * len(to_check2)
   max_match1 = 0
   max_match2 = 0
-  for i in range(n - len(to_check1)):
-    curr_match1 = 0
-    for j in range(len(to_check1)):
-      if to_check1[j] == '*' or to_check1[j] == extractedInformation[i + j]:
-        curr_match1 += 1
-    max_match1 = max(max_match1, curr_match1)
+
   for i in range(n - len(to_check2)):
     curr_match2 = 0
+    yyyy = "0"
     for j in range(len(to_check2)):
-      if to_check2[j] == '*' or to_check2[j] == extractedInformation[i + j]:
+      c = extractedInformation[i + j];
+      if to_check2[j] == '^' and c >= '0' and c <= '9':
+        yyyy = yyyy + c
+      elif to_check2[j] == c:
         curr_match2 += 1
-    max_match2=max(max_match2, curr_match2)
+    if int(yyyy) <= 2021 and int(yyyy) >= 1800:
+      curr_match2 += 4
+    max_match2 = max(max_match2, curr_match2)
+
+  for i in range(n - len(to_check1)):
+    curr_match1 = 0
+    dd = "0"
+    mm = "0" 
+    yyyy = "0"
+    for j in range(len(to_check1)):
+      c = extractedInformation[i + j];
+      if to_check1[j] == '*' and c >= '0' and c <= '9':
+        dd = dd + c
+      elif to_check1[j] == '#' and c >= '0' and c <= '9':
+        mm = mm + c
+      elif to_check1[j] == '^' and c >= '0' and c <= '9':
+        yyyy = yyyy + c
+      elif to_check1[j] == c:
+        curr_match1 += 1
+    if int(dd) <= 31 and int(dd) >= 1:
+      curr_match1 += 2
+    if int(mm) <= 12 and int(mm) >= 1:
+      curr_match1 += 2
+    if int(yyyy) <= 2021 and int(yyyy) >= 1800:
+      curr_match1 += 4
+    max_match1 = max(max_match1, curr_match1)
+
   max_match1 = max_match1 * len(to_check2)
   max_match2 = max_match2 * len(to_check1)
   final_score = max(max_match1, max_match2) * 100 / max_score
@@ -53,18 +78,66 @@ def passport_double_check(extractedInformation):
   max_score = len(to_check1) * len(to_check2)
   max_match1 = 0
   max_match2 = 0
+
   for i in range(n - len(to_check1)):
     curr_match1 = 0
     for j in range(len(to_check1)):
       if to_check1[j] == extractedInformation[i + j]:
         curr_match1 += 1
     max_match1 = max(max_match1, curr_match1)
+
   for i in range(n - len(to_check2)):
     curr_match2 = 0
     for j in range(len(to_check2)):
       if to_check2[j] == extractedInformation[i + j]:
         curr_match2 += 1
     max_match2 = max(max_match2, curr_match2)
+
+  max_match1 = max_match1 * len(to_check2)
+  max_match2 = max_match2 * len(to_check1)
+  final_score = max(max_match1, max_match2) * 100 / max_score
+  return str(final_score)
+
+
+def licence_double_check(extractedInformation):
+  n = len(extractedInformation)
+  to_check1 = "AUTHORISATION TO DRIVE FOLLOWING CLASS"
+  to_check2 = "DOB : **-##-^^^^ "
+  max_score = len(to_check1) * len(to_check2)
+  max_match1 = 0
+  max_match2 = 0
+
+  for i in range(n - len(to_check1)):
+    curr_match1 = 0
+    for j in range(len(to_check1)):
+      c = extractedInformation[i + j];
+      if to_check1[j] == c:
+        curr_match1 += 1
+    max_match1 = max(max_match1, curr_match1)
+
+  for i in range(n - len(to_check2)):
+    curr_match2 = 0
+    dd = "0"
+    mm = "0" 
+    yyyy = "0"
+    for j in range(len(to_check2)):
+      c = extractedInformation[i + j];
+      if to_check2[j] == '*' and c >= '0' and c <= '9':
+        dd = dd + c
+      elif to_check2[j] == '#' and c >= '0' and c <= '9':
+        mm = mm + c
+      elif to_check2[j] == '^' and c >= '0' and c <= '9':
+        yyyy = yyyy + c
+      elif to_check2[j] == c:
+        curr_match2 += 1
+    if int(dd) <= 31 and int(dd) >= 1:
+      curr_match2 += 2
+    if int(mm) <= 12 and int(mm) >= 1:
+      curr_match2 += 2
+    if int(yyyy) <= 2021 and int(yyyy) >= 1800:
+      curr_match2 += 4
+    max_match2 = max(max_match2, curr_match2)
+
   max_match1 = max_match1 * len(to_check2)
   max_match2 = max_match2 * len(to_check1)
   final_score = max(max_match1, max_match2) * 100 / max_score
@@ -78,6 +151,7 @@ def pan_double_check(extractedInformation):
   max_score = len(to_check1) * len(to_check2)
   max_match1 = 0
   max_match2 = 0
+
   for i in range(n - len(to_check1)):
     curr_match1 = 0
     for j in range(len(to_check1)):
@@ -87,6 +161,7 @@ def pan_double_check(extractedInformation):
       if to_check1[j] == c:
         curr_match1 += 1
     max_match1 = max(max_match1, curr_match1)
+
   for i in range(n - len(to_check2)):
     curr_match2 = 0
     for j in range(len(to_check2)):
@@ -96,6 +171,40 @@ def pan_double_check(extractedInformation):
       if to_check2[j] == c:
         curr_match2 += 1
     max_match2 = max(max_match2, curr_match2)
+
+  max_match1 = max_match1 * len(to_check2)
+  max_match2 = max_match2 * len(to_check1)
+  final_score = max(max_match1, max_match2) * 100 / max_score
+  return str(final_score)
+
+def voter_double_check(extractedInformation):
+  n = len(extractedInformation)
+  to_check1 = "election commission of india"
+  to_check2 = "date of birth"
+  max_score = len(to_check1) * len(to_check2)
+  max_match1 = 0
+  max_match2 = 0
+
+  for i in range(n - len(to_check1)):
+    curr_match1 = 0
+    for j in range(len(to_check1)):
+      c = extractedInformation[i + j];
+      if c >= 'A' and c <= 'Z':
+        c = c.lower()
+      if to_check1[j] == c:
+        curr_match1 += 1
+    max_match1 = max(max_match1, curr_match1)
+
+  for i in range(n - len(to_check2)):
+    curr_match2 = 0
+    for j in range(len(to_check2)):
+      c = extractedInformation[i + j];
+      if c >= 'A' and c <= 'Z':
+        c = c.lower()
+      if to_check2[j] == c:
+        curr_match2 += 1
+    max_match2 = max(max_match2, curr_match2)
+    
   max_match1 = max_match1 * len(to_check2)
   max_match2 = max_match2 * len(to_check1)
   final_score = max(max_match1, max_match2) * 100 / max_score
@@ -136,34 +245,33 @@ def main(img):
   img2 = img2[:,:,::-1].copy()
   img2_raw = img2
   img2 = cv2.medianBlur(img2_raw,5)
-  extractedInformation6 = pytesseract.image_to_string(img2)
+  extractedInformation2 = pytesseract.image_to_string(img2)
   #IMG2 AND IMG2_RAW ARE THE NON - SKEW CORRECTED IMAGES
 
 
-  # img3 = cv2.medianBlur(img1_raw,3)
-  # extractedInformation3 = pytesseract.image_to_string(img3)
+  img3 = cv2.medianBlur(img1_raw,3)
+  extractedInformation3 = pytesseract.image_to_string(img3)
 
 
   img4 = cv2.medianBlur(img2_raw,3)
-  extractedInformation2 = pytesseract.image_to_string(img4)
+  extractedInformation4 = pytesseract.image_to_string(img4)
 
 
-  # img5 = cv2.medianBlur(img1_raw,1) 
-  # extractedInformation4 = pytesseract.image_to_string(img5)
+  img5 = cv2.medianBlur(img1_raw,1) 
+  extractedInformation5 = pytesseract.image_to_string(img5)
 
 
-  # img6 = cv2.medianBlur(img2_raw,1)
-  # extractedInformation5 = pytesseract.image_to_string(img6)
+  img6 = cv2.medianBlur(img2_raw,1)
+  extractedInformation6 = pytesseract.image_to_string(img6)
   #IMG1, IMG3, IMG5 ARE THE PROCESSED VERSIONS OF IMG (SKEW CORRECTED)
   #IMG2, IMG4, IMG6 ARE THE PROCESSED VERSIONS OF IMG_RAW(NON - SKEW CORRECTED)
 
 
   #CONCATENATION OF ALL THE OCR STRINGS 
-  # extractedInformation  = "   " + str(extractedInformation1 + " " + extractedInformation2 + " " + extractedInformation3 + " " + extractedInformation4 + " " + extractedInformation5 + " " + extractedInformation6) + "   "
-  extractedInformation = str(extractedInformation1) + " " + str(extractedInformation2) + " " + str(extractedInformation6)
+  extractedInformation  = "   " + str(extractedInformation1 + " " + extractedInformation2 + " " + extractedInformation3 + " " + extractedInformation4 + " " + extractedInformation5 + " " + extractedInformation6) + "   "
+  #extractedInformation = str(extractedInformation1) + " " + str(extractedInformation2) + " " + str(extractedInformation6)
   n = len(extractedInformation)
-
-
+  #print(extractedInformation)
 
   #CODE FOR SEARCHING THE FINAL STRING FOR THE UIDs SPECIFIC TO ALL TYPES OF KYCs
 
@@ -258,7 +366,7 @@ def main(img):
   if licence==1:
     uid=str(extractedInformation[startli:startli+16])
     kyc_type="Driving Licence"
-    final_score=aadhaar_double_check(extractedInformation)
+    final_score=licence_double_check(extractedInformation)
     return uid, kyc_type,final_score
 
 
@@ -316,7 +424,7 @@ def main(img):
   if vote==1:
     uid=str(extractedInformation[startvo:startvo+10])
     kyc_type="Voter's Identity Card"
-    final_score=aadhaar_double_check(extractedInformation)
+    final_score=voter_double_check(extractedInformation)
     return uid, kyc_type,final_score
 
 
@@ -413,3 +521,4 @@ def new_page(result):
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0', port = 5000, debug = True)
+
