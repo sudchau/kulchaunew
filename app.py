@@ -549,9 +549,30 @@ def kulchau():
 def forserver():
   url = request.form['image']
   response = requests.get(url)
+  flag = request.form['flag']
   bg = im.open(io.BytesIO(response.content))
   uid, kyc_type,final_score = main(bg)
   return "This is a {}, with UID = {}\nWith Heuristic Closeness Percentage = {}%".format(kyc_type,uid,final_score)
+  a, b = bg.size
+  print("{} and {}".format(a,b))
+  if flag=='0':
+    newflag = 1    
+    uid, kyc_type,final_score = main1(bg)
+    if(kyc_type=='none found'):
+      newflag = 0
+    return "{}This is a {}, with UID = {}\nWith Heuristic Closeness Index = {}%".format(newflag,kyc_type,uid,final_score)
+  if flag=='1':
+    newflag = 1    
+    uid, kyc_type,final_score = main2(bg)
+    if(kyc_type=='none found'):
+      newflag = 0
+    return "{}This is a {}, with UID = {}\nWith Heuristic Closeness Index = {}%".format(newflag,kyc_type,uid,final_score)
+  if flag=='2':
+    newflag = 1    
+    uid, kyc_type,final_score = main3(bg)
+    if(kyc_type=='none found'):
+      newflag = 0
+    return "{}This is a {}, with UID = {}\nWith Heuristic Closeness Index = {}%".format(newflag,kyc_type,uid,final_score)
 
 
 @app.route('/result/<result>',methods=['POST', 'GET'])
