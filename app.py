@@ -527,7 +527,7 @@ def main3(img):
   #img.thumbnail(size=(800,800))
   img3 = np.array(img)
   img3 = img3[:, :, ::-1].copy()
-  img3 = cv2.medianBlur(img3,3)
+  img3 = cv2.medianBlur(img3,1)
   extractedInformation1 = pytesseract.image_to_string(img3)
   extractedInformation = "  " + extractedInformation1 + "  "
   return OUR_ALGORITHM(extractedInformation)
