@@ -504,7 +504,7 @@ def main(img):
 
 #MAIN FUNCTIONS FOR MOBILE APPLICATION (FOR FASTER EXECUTION ON APP)---> 
 def main1(img):
-  img.thumbnail(size=(1000,1000))
+  #img.thumbnail(size=(1000,1000))
   img1 = np.array(img)
   img1 = img1[:, :, ::-1].copy()
   img1 = cv2.medianBlur(img1,5)
@@ -514,7 +514,7 @@ def main1(img):
   
 
 def main2(img):
-  img.thumbnail(size=(1000,1000))
+  #img.thumbnail(size=(1000,1000))
   img2 = np.array(img)
   img2 = img2[:, :, ::-1].copy()
   img2 = cv2.medianBlur(img2,3)
@@ -524,7 +524,7 @@ def main2(img):
 
 
 def main3(img):
-  img.thumbnail(size=(1000,1000))
+  #img.thumbnail(size=(1000,1000))
   img3 = np.array(img)
   img3 = img3[:, :, ::-1].copy()
   img3 = cv2.medianBlur(img3,1)
