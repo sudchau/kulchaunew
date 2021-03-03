@@ -550,7 +550,7 @@ def forserver():
   url = request.form['image']
   response = requests.get(url)
   flag = request.form['flag']
-  #bg = im.open(io.BytesIO(response.content))
+  bg = im.open(io.BytesIO(response.content))
   #uid, kyc_type,final_score = main(bg)
   #return "This is a {}, with UID = {}\nWith Heuristic Closeness Percentage = {}%".format(kyc_type,uid,final_score)
   #a, b = bg.size
