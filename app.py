@@ -60,7 +60,7 @@ def aadhaar_double_check(extractedInformation):
     curr_match2 = 0
     yyyy = "0"
     for j in range(len(to_check2)):
-      c = extractedInformation[i + j]
+      c = extractedInformation[i + j];
       if to_check2[j] == '^' and c >= '0' and c <= '9':
         yyyy = yyyy + c
       elif to_check2[j] == c:
@@ -185,7 +185,7 @@ def pan_double_check(extractedInformation):
   for i in range(n - len(to_check1)):
     curr_match1 = 0
     for j in range(len(to_check1)):
-      c = extractedInformation[i + j];
+      c = extractedInformation[i + j]
       if c >= 'A' and c <= 'Z':
         c = c.lower()
       if to_check1[j] == c:
@@ -195,7 +195,7 @@ def pan_double_check(extractedInformation):
   for i in range(n - len(to_check2)):
     curr_match2 = 0
     for j in range(len(to_check2)):
-      c = extractedInformation[i + j];
+      c = extractedInformation[i + j]
       if c >= 'A' and c <= 'Z':
         c = c.lower()
       if to_check2[j] == c:
@@ -448,11 +448,11 @@ def OUR_ALGORITHM(extractedInformation):
 
 #MAIN WEBSITE FUNCTION -->
 def main(img):
+  img.thumbnail(size=(1500,1500))
   img_raw = img
   #CONVERSION OF IMG AND IMG_RAW TO A FORMAT THAT CAN BE PROCESSED BY CV2
   #IMG--->IMG1
   #IMG_RAW--->IMG2
-  #img.save('lolskew.jpg')
   img1 = np.array(img)
   img1 = img1[:, :, ::-1].copy()
 
@@ -497,37 +497,55 @@ def main(img):
 
   #CONCATENATION OF ALL THE OCR STRINGS 
   extractedInformation  = "   " + str(extractedInformation1 + " " + extractedInformation2 + " " + extractedInformation3 + " " + extractedInformation4 + " " + extractedInformation5 + " " + extractedInformation6) + "   "
-  
+  print(extractedInformation)
 
   return OUR_ALGORITHM(extractedInformation)
 
 
 #MAIN FUNCTIONS FOR MOBILE APPLICATION (FOR FASTER EXECUTION ON APP)---> 
 def main1(img):
+  img_raw=img
+  img1_raw = np.array(img_raw)
+  img1_raw = img1_raw[:, :, ::-1].copy()
+  extractedInformation1 = pytesseract.image_to_string(img1_raw)
+
+  img.thumbnail(size=(1200,1200))
   img1 = np.array(img)
   img1 = img1[:, :, ::-1].copy()
   img1 = cv2.medianBlur(img1,5)
   extractedInformation1 = pytesseract.image_to_string(img1)
-  extractedInformation1 = "  " + extractedInformation1 + "  "
-  return OUR_ALGORITHM(extractedInformation1)
+  extractedInformation = "  " + extractedInformation1 + "  " + extractedInformation2 + "  "
+  return OUR_ALGORITHM(extractedInformation)
   
 
 def main2(img):
+  img_raw=img
+  img2_raw = np.array(img_raw)
+  img2_raw = img2_raw[:, :, ::-1].copy()
+  extractedInformation2 = pytesseract.image_to_string(img2_raw)
+
+  img.thumbnail(size=(1200,1200))
   img2 = np.array(img)
   img2 = img2[:, :, ::-1].copy()
   img2 = cv2.medianBlur(img2,3)
-  extractedInformation2 = pytesseract.image_to_string(img2)
-  extractedInformation2 = "  " + extractedInformation2 + "  "
-  return OUR_ALGORITHM(extractedInformation2)
+  extractedInformation1 = pytesseract.image_to_string(img2)
+  extractedInformation = "  " + extractedInformation1 + "  " + extractedInformation2 + "  "
+  return OUR_ALGORITHM(extractedInformation)
 
 
 def main3(img):
+  img_raw=img
+  img3_raw = np.array(img_raw)
+  img3_raw = img3_raw[:, :, ::-1].copy()
+  extractedInformation2 = pytesseract.image_to_string(img3_raw)
+
+  img.thumbnail(size=(1200,1200))
   img3 = np.array(img)
   img3 = img3[:, :, ::-1].copy()
-  img3 = cv2.medianBlur(img3,1)
-  extractedInformation3 = pytesseract.image_to_string(img3)
-  extractedInformation3 = "  " + extractedInformation3 + "  "
-  return OUR_ALGORITHM(extractedInformation3)
+  img3 = cv2.medianBlur(img3,3)
+  extractedInformation1 = pytesseract.image_to_string(img3)
+  extractedInformation = "  " + extractedInformation1 + "  " + extractedInformation2 + "  "
+  return OUR_ALGORITHM(extractedInformation)
 
 
 #SERVERS --->
@@ -546,28 +564,9 @@ def kulchau():
 def forserver():
   url = request.form['image']
   response = requests.get(url)
-  flag = request.form['flag']
   bg = im.open(io.BytesIO(response.content))
-  a, b = bg.size
-  print("{} and {}".format(a,b))
-  if flag=='0':
-    newflag = 1    
-    uid, kyc_type,final_score = main1(bg)
-    if(kyc_type=='none found'):
-      newflag = 0
-    return "{}This is a {}, with UID = {}\nWith Heuristic Closeness Index = {}%".format(newflag,kyc_type,uid,final_score)
-  if flag=='1':
-    newflag = 1    
-    uid, kyc_type,final_score = main2(bg)
-    if(kyc_type=='none found'):
-      newflag = 0
-    return "{}This is a {}, with UID = {}\nWith Heuristic Closeness Index = {}%".format(newflag,kyc_type,uid,final_score)
-  if flag=='2':
-    newflag = 1    
-    uid, kyc_type,final_score = main3(bg)
-    if(kyc_type=='none found'):
-      newflag = 0
-    return "{}This is a {}, with UID = {}\nWith Heuristic Closeness Index = {}%".format(newflag,kyc_type,uid,final_score)
+  uid, kyc_type,final_score = main(bg)
+  return "This is a {}, with UID = {}\nWith Heuristic Closeness Percentage = {}%".format(kyc_type,uid,final_score)
 
 
 @app.route('/result/<result>',methods=['POST', 'GET'])
@@ -599,3 +598,4 @@ def new_page(result):
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0', port = 5000, debug = True)
+
