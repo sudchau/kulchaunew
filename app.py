@@ -504,47 +504,32 @@ def main(img):
 
 #MAIN FUNCTIONS FOR MOBILE APPLICATION (FOR FASTER EXECUTION ON APP)---> 
 def main1(img):
-  img_raw=img
-  img1_raw = np.array(img_raw)
-  img1_raw = img1_raw[:, :, ::-1].copy()
-  extractedInformation1 = pytesseract.image_to_string(img1_raw)
-
   img.thumbnail(size=(1200,1200))
   img1 = np.array(img)
   img1 = img1[:, :, ::-1].copy()
   img1 = cv2.medianBlur(img1,5)
   extractedInformation1 = pytesseract.image_to_string(img1)
-  extractedInformation = "  " + extractedInformation1 + "  " + extractedInformation2 + "  "
+  extractedInformation = "  " + extractedInformation1 + "  "
   return OUR_ALGORITHM(extractedInformation)
   
 
 def main2(img):
-  img_raw=img
-  img2_raw = np.array(img_raw)
-  img2_raw = img2_raw[:, :, ::-1].copy()
-  extractedInformation2 = pytesseract.image_to_string(img2_raw)
-
   img.thumbnail(size=(1200,1200))
   img2 = np.array(img)
   img2 = img2[:, :, ::-1].copy()
   img2 = cv2.medianBlur(img2,3)
   extractedInformation1 = pytesseract.image_to_string(img2)
-  extractedInformation = "  " + extractedInformation1 + "  " + extractedInformation2 + "  "
+  extractedInformation = "  " + extractedInformation1 + "  "
   return OUR_ALGORITHM(extractedInformation)
 
 
 def main3(img):
-  img_raw=img
-  img3_raw = np.array(img_raw)
-  img3_raw = img3_raw[:, :, ::-1].copy()
-  extractedInformation2 = pytesseract.image_to_string(img3_raw)
-
   img.thumbnail(size=(1200,1200))
   img3 = np.array(img)
   img3 = img3[:, :, ::-1].copy()
   img3 = cv2.medianBlur(img3,3)
   extractedInformation1 = pytesseract.image_to_string(img3)
-  extractedInformation = "  " + extractedInformation1 + "  " + extractedInformation2 + "  "
+  extractedInformation = "  " + extractedInformation1 + "  "
   return OUR_ALGORITHM(extractedInformation)
 
 
